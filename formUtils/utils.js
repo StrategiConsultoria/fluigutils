@@ -1,5 +1,13 @@
 export class Utils {
 
+	//função que testa se a classe foi carregada corretamente
+	static checkLoaded() {
+		if (typeof Utils == 'undefined') {
+			console.log('Utils não carregado')
+		} else {
+			console.log('Utils carregado')
+		}
+	}
 
 	/**
 	 * obtém o valor de um campo do formulário

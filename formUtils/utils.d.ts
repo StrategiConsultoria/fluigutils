@@ -1,4 +1,7 @@
 declare class Utils {
+
+	static checkLoaded(): void;
+
     /**
      * obtém o valor de um campo do formulário
      * @param id - id do campo
