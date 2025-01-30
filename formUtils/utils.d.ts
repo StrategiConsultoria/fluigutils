@@ -107,6 +107,26 @@ declare class Utils {
      * garante que apenas um checkbox esteja marcado por vez na tabela
      */
     static ensureSingleSelection(tablename: string, clickedCheckbox: HTMLElement): void;
+
+    /**
+     * Validates if a string is a valid CNPJ number
+     * @param cnpj - CNPJ string to validate
+     * @returns true if CNPJ is valid, false otherwise
+     */
+    static isCNPJ(cnpj: string): boolean;
+
+    /**
+     * Validates if a string is a valid CPF number
+     * @param cpf - CPF string to validate
+     * @returns true if CPF is valid, false otherwise
+     */
+    static isCPF(cpf: string): boolean;
+
+    /**
+     * Transforms all inputs within a div into span elements
+     * @param divId - ID of the div containing inputs
+     */
+    static transformInputsToSpans(divId: string): void;
 }
 
 export = Utils;

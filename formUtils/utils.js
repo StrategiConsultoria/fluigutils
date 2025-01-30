@@ -326,4 +326,117 @@ export class Utils {
 			.not(clickedCheckbox)
 			.prop('checked', false);
 	}
+
+	/**
+	 * Validates if a string is a valid CNPJ number
+	 * @param {string} cnpj - CNPJ string to validate
+	 * @returns {boolean} true if CNPJ is valid, false otherwise
+	 */
+	static isCNPJ(cnpj) {
+		// Remove any non-digit characters
+		const cleanCNPJ = cnpj.replace(/[^\d]/g, '');
+
+		if (cleanCNPJ.length !== 14) {
+			return false;
+		}
+
+		// Check for known invalid sequences
+		if (/^(\d)\1+$/.test(cleanCNPJ)) {
+			return false;
+		}
+
+		// Calculate first digit
+		const firstDigit = Utils.#calculateCNPJDigit(cleanCNPJ.slice(0, 12));
+		if (firstDigit !== Number(cleanCNPJ[12])) {
+			return false;
+		}
+
+		// Calculate second digit
+		const secondDigit = Utils.#calculateCNPJDigit(cleanCNPJ.slice(0, 13));
+		return secondDigit === Number(cleanCNPJ[13]);
+	}
+
+	/**
+	 * Calculates a CNPJ verification digit
+	 * @param {string} baseNumber - Base number to calculate the digit
+	 * @returns {number} The calculated verification digit
+	 */
+	static #calculateCNPJDigit(baseNumber) {
+		let sum = 0;
+		let position = baseNumber.length - 7;
+
+		for (let i = baseNumber.length; i >= 1; i--) {
+			sum += Number(baseNumber[baseNumber.length - i]) * position--;
+			if (position < 2) position = 9;
+		}
+
+		const result = sum % 11;
+		return result < 2 ? 0 : 11 - result;
+	}
+
+	/**
+	 * Validates if a string is a valid CPF number
+	 * @param {string} cpf - CPF string to validate
+	 * @returns {boolean} true if CPF is valid, false otherwise
+	 */
+	static isCPF(cpf) {
+		// Remove any non-digit characters
+		const cleanCPF = cpf.replace(/[^\d]/g, '');
+
+		if (cleanCPF.length !== 11) {
+			return false;
+		}
+
+		// Check for known invalid sequences
+		if (/^(\d)\1+$/.test(cleanCPF)) {
+			return false;
+		}
+
+		// Validate first digit
+		const firstDigit = Utils.#calculateCPFDigit(cleanCPF.slice(0, 9));
+		if (firstDigit !== Number(cleanCPF[9])) {
+			return false;
+		}
+
+		// Validate second digit
+		const secondDigit = Utils.#calculateCPFDigit(cleanCPF.slice(0, 10));
+		return secondDigit === Number(cleanCPF[10]);
+	}
+
+	/**
+	 * Calculates a CPF verification digit
+	 * @param {string} baseNumber - Base number to calculate the digit
+	 * @returns {number} The calculated verification digit
+	 */
+	static #calculateCPFDigit(baseNumber) {
+		let sum = 0;
+		const weight = baseNumber.length + 1;
+
+		for (let i = 0; i < baseNumber.length; i++) {
+			sum += Number(baseNumber[i]) * (weight - i);
+		}
+
+		const result = (sum * 10) % 11;
+		return result === 10 || result === 11 ? 0 : result;
+	}
+
+	/**
+	 * Transforms all inputs within a div into span elements
+	 * @param {string} divId - ID of the div containing inputs
+	 */
+	static transformInputsToSpans(divId) {
+		const inputs = $(`#${divId} input`).toArray();
+		inputs.forEach(input => {
+			const value = $(input).val() || '';
+			$(input).replaceWith($(`<br><span>${value}</span>`));
+		});
+	}
+
+	/**
+	 * Hides the send button of a form
+	 * @param {HTMLElement} parent - Parent element of the send button
+	 */
+	static hideSendButton(parent) {
+		$(parent.$("[data-send]").parent()[0]).hide()
+	}
 }
